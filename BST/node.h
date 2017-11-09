@@ -6,7 +6,7 @@
 template <class Item>
 class bag
 {
-public:
+public:	//im making
 	typedef size_t size_type;
 	typedef Item value_type;
 	// CONSTRUCTORS and DESTRUCTOR
