@@ -14,7 +14,7 @@ int main(void)
 	b1.insert(4);
 	b1.insert(5);
 	b1.debug();
-	//init
+	//init1
 
 	cout << "dd" << endl;
 
