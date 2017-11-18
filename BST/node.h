@@ -9,7 +9,7 @@ class bag
 public:
 	typedef size_t size_type;
 	typedef Item value_type;
-	// CONSTRUCTORS and DESTRUCTOR
+	// CONSTRUCTORS and DESTRUCTOR ....
 	bag() { root_ptr = NULL; }
 	bag(const bag& source);
 	~bag();
