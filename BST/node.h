@@ -22,7 +22,7 @@ public:
 	// CONSTANT functions
 	size_type size() const;
 	size_type count(const Item& target) const;
-	void debug() const { print(root_ptr, 2); }
+	void debug() const { print(root_ptr, 3); }
 private:
 	tree<Item> *root_ptr; // Root pointer of binary search tree
 	void insert_all(tree<Item>* addroot_ptr);
@@ -201,15 +201,40 @@ void bag<Item>::insert(const Item& entry)
 		root_ptr = new tree<Item>(entry);
 		return;
 	}
-
 	else
 	{   // Move down the tree and add a new leaf:
 		cursor = root_ptr;
-		if (entry > cursor->data_field)	// right side
+		while (1)
 		{
-			cursor->set_right(new tree<Item>);
+			if (entry <= cursor->data())	// right side
+			{
+				if (cursor->left() == NULL)
+				{
+					cursor->set_left(new tree<Item>);
+					cursor->left()->set_data(entry);
+					return;
+				}
+				else
+				{
+					cursor = cursor->left();
+				}
+			}
+			else
+			{
+				if (cursor->right() == NULL)
+				{
+					cursor->set_right(new tree<Item>);
+					cursor->right()->set_data(entry);
+					return;
+				}
+				else
+				{
+					cursor = cursor->right();
+				}
+
+			}
 		}
-		/* STUDENT WORK */
+
 	}
 }
 
