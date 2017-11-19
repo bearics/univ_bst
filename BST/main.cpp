@@ -8,21 +8,26 @@ int main(void)
 {
 	bag<int> b1;
 
-	b1.insert(7);
-	b1.insert(6);
-	b1.insert(9);
-	b1.insert(3);
-	b1.insert(37);
 	b1.insert(45);
 	b1.insert(9);
-	b1.insert(29);
-	b1.insert(5);
+	b1.insert(17);
+	b1.insert(13);
+	b1.insert(3);
+	b1.insert(13);
+	b1.insert(9);
+	b1.insert(53);
+	b1.insert(54);
+	b1.insert(13);
+	b1.insert(51);
+	b1.insert(9);
+	b1.insert(13);
 	b1.debug();
-	cout << endl;
-	b1.erase_one(9);
+
+	cout << "--------------------------------------------------------------" << endl;
+	b1.erase(9);
 	b1.debug();
-	cout << endl;
-	b1.erase_one(37);
+	cout << "--------------------------------------------------------------" << endl;
+	b1.erase(13);
 	b1.debug();
 	//init
 

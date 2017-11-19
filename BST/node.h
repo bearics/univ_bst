@@ -91,60 +91,40 @@ bool bst_remove(tree<Item>*& root_ptr, const Item& target)
 			return true;
 		}
 	}
+
 	}
 
+template <class Item>
+bool bst_search(tree<Item>*& root_ptr, const Item& target)
+{	// 타겟과 일치하는 데이터 값을 가진 트리가 있는지 확인
+	if(root_ptr->data() == target )
+		return true;
+	else
+	{
+		if (root_ptr->left() != NULL)
+			return bst_search(root_ptr->left(), target);
+		if (root_ptr->right() != NULL)
+			return bst_search(root_ptr->right(), target);
+		return false;
+	}
+}
 
 template <class Item>
 typename bag<Item>::size_type bst_remove_all
 (tree<Item>*& root_ptr, const Item& target)
-// Precondition: root_ptr is a root pointer of a binary search tree 
-// or may be NULL for an empty tree).
-// Postcondition: All copies of target have been removed from the tree
-// has been removed, and root_ptr now points to the root of the new 
-// (smaller) binary search tree. The return value tells how many copies
-// of the target were removed.
+// 중복된 타겟을 모두 삭제하는 함수
 {
-	/** STUDENT WORK
-	** Note: This implementation is similar to bst_remove, except that
-	** all occurrences of the target must be removed, and the return
-	** value is the number of copies that were removed.
-	*/
 
 	tree<Item> *oldroot_ptr;
+	bag<Item>::size_type count = 0;
 
-	if (root_ptr == NULL)
-	{   // Empty tree
-		/* STUDENT WORK */
+	while (bst_search(root_ptr, target))
+	{	// bst_search 함수를 통해 타겟이 트리에 있다면 하나씩 지운다.
+		bst_remove(root_ptr, target);
+		count++;
 	}
 
-	if (target < root_ptr->data())
-	{   // Continue looking in the left subtree
-		/* STUDENT WORK */
-	}
-
-	if (target > root_ptr->data())
-	{   // Continue looking in the right subtree
-		/* STUDENT WORK */
-	}
-
-	if (root_ptr->left() == NULL)
-	{   // Target was found and there is no left subtree, so we can
-		// remove this node, making the right child be the new root.
-		oldroot_ptr = root_ptr;
-		root_ptr = root_ptr->right();
-		delete oldroot_ptr;
-		return 1;
-	}
-
-	// If code reaches this point, then we must remove the target from
-	// the current node. We'll actually replace this target with the
-	// maximum item in our left subtree. We then continue
-	// searching for more copies of the target to remove.
-	// This continued search must start at the current root (since
-	// the maximum element that we moved up from our left subtree
-	// might also be a copy of the target).
-	/* STUDENT WORK */
-
+	return count;
 }
 
 template <class Item>
@@ -250,10 +230,12 @@ void bag<Item>::operator =(const bag<Item>& source)
 template <class Item>
 void bag<Item>::operator +=(const bag<Item>& addend)
 {
+	tree<Item> *addroot_ptr;
 	if (root_ptr == addend.root_ptr)
 	{
-		bag<Item> copy = addend;
-		insert_all(copy.root_ptr);
+		addroot_ptr = tree_copy(addend.root_ptr);
+		insert_all(addroot_ptr);
+		tree_clear(addroot_ptr);
 	}
 	else
 		insert_all(addend.root_ptr);
@@ -268,18 +250,12 @@ bag<Item> operator +(const bag<Item>& b1, const bag<Item>& b2)
 }
 
 template <class Item>
-void bag<Item>::insert_all(tree<Item>* addroot_ptr)
-// Precondition: addroot_ptr is the root pointer of a binary search tree that
-// is separate for the binary search tree of the bag that activated this
-// method.
-// Postcondition: All the items from the addroot_ptr's binary search tree
-// have been added to the binary search tree of the bag that activated this
-// method.
-{
-	if (addroot_ptr != NULL)
+void bag<Item>::insert_all(tree<Item>* root_ptr)
+{	// 해당 루트에 있는 트리를 현재 노드에 모두 insert한다.
+	if (root_ptr != NULL)
 	{
-		insert(addroot_ptr->data());
-		insert_all(addroot_ptr->left());
-		insert_all(addroot_ptr->right());
+		insert(root_ptr->data());
+		insert_all(root_ptr->left());
+		insert_all(root_ptr->right());
 	}
 }
