@@ -18,6 +18,12 @@ int main(void)
 	b1.insert(29);
 	b1.insert(5);
 	b1.debug();
+	cout << endl;
+	b1.erase_one(9);
+	b1.debug();
+	cout << endl;
+	b1.erase_one(37);
+	b1.debug();
 	//init
 
 	cout << "dd" << endl;

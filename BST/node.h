@@ -34,87 +34,65 @@ bag<Item> operator +(const bag<Item>& b1, const bag<Item>& b2);
 
 template <class Item>
 void bst_remove_max(tree<Item>*& root_ptr, Item& removed)
-// Precondition: root_ptr is a root pointer of a non-empty binary 
-// search tree.
-// Postcondition: The largest item in the binary search tree has been
-// removed, and root_ptr now points to the root of the new (smaller) 
-// binary search tree. The reference parameter, removed, has been set 
-// to a copy of the removed item.
+// 현재 data 값 자리에 왼쪽 트리 중에 가장 큰 값으로 대체하고 삭제하는 함수
 {
-	/***STUDENT WORK***
-	** This recursive function should be implemented by the student, as
-	** discussed on page 507 of the second edition of the textbook.
-	** The base case occurs when there is no right child of the
-	** root_ptr node. In this case, the root_ptr should be moved down
-	** to its left child and then the original root node must be
-	** deleted. There is also a recursive case, when the root does
-	** have a right child. In this case, a recursive call can be made
-	** using root_ptr->right( ) as the first parameter. Please notice
-	** in bintree.h, the return value from root_ptr->right( ) has been
-	** changed from the first printing of the book. The new version of
-	** the right() function has the prototype:
-	**    tree<Item>*&
-	** The & symbol in the return type means that the return value is
-	** a reference to the actual right pointer in the node. Any changes
-	** made to this pointer in the recursive call will directly change
-	** the right pointer in the root_ptr's node.
-	*/
+	tree<Item> *oldroot;
+
+	if (root_ptr == NULL)
+	{	// 빈트리면 할게 없음
+		return;
+	}
+
+	if (root_ptr->right() == NULL)
+	{	// 오른쪽 트리가 없을 경우
+		removed = root_ptr->data();
+		oldroot = root_ptr;
+		root_ptr = root_ptr->left();
+		delete oldroot;
+	}
+	else // 오른쪽 트리가 있으면 
+	{
+		bst_remove_max(root_ptr->right(), removed);
+	}
+	return;
 }
 
 template <class Item>
 bool bst_remove(tree<Item>*& root_ptr, const Item& target)
-// Precondition: root_ptr is a root pointer of a binary search tree 
-// or may be NULL for an empty tree).
-// Postcondition: If target was in the tree, then one copy of target
-// has been removed, and root_ptr now points to the root of the new 
-// (smaller) binary search tree. In this case the function returns true.
-// If target was not in the tree, then the tree is unchanged (and the
-// function returns false).
+// 트리에서 타겟을 지우는 함수(erase_one 함수를 위해 정의)
 {
 	tree<Item> *oldroot_ptr;
 
 	if (root_ptr == NULL)
-	{   // Empty tree
+	{   // 빈 트리면 삭제할게 없음
 		return false;
 	}
 
 	if (target < root_ptr->data())
-	{   // Continue looking in the left subtree
-		// Note: Any change made to root_ptr->left by this recursive
-		// call will change the actual left pointer (because the return
-		// value from the left() member function is a reference to the
-		// actual left pointer.
+	{	// 데이터가 타겟보다 크면 왼쪽 트리를 탐색
 		return bst_remove(root_ptr->left(), target);
 	}
-
-	if (target > root_ptr->data())
-	{   // Continue looking in the right subtree
-		// Note: Any change made to root_ptr->right by this recursive
-		// call will change the actual right pointer (because the return
-		// value from the right() member function is a reference to the
-		// actual right pointer.
+	else if (target > root_ptr->data())
+	{   // 데이터가 타겟보다 작으면 오른쪽 트리 탐색
 		return bst_remove(root_ptr->right(), target);
 	}
-
-	if (root_ptr->left() == NULL)
-	{   // Target was found and there is no left subtree, so we can
-		// remove this node, making the right child be the new root.
-		oldroot_ptr = root_ptr;
-		root_ptr = root_ptr->right();
-		delete oldroot_ptr;
-		return true;
+	else // data == target
+	{	// 데이터 값이 타겟과 같을 경우 왼쪽 트리가 있는 경우와 없는 경우 분리
+		if (root_ptr->left() == NULL)
+		{   // 왼쪽 트리가 없으면 오른쪽 트리가 루트가 됨
+			oldroot_ptr = root_ptr;
+			root_ptr = root_ptr->right();
+			delete oldroot_ptr;
+			return true;
+		}
+		else
+		{	// 왼쪽 트리가 있으면 그 중에 가장 큰 값이 루트를 대신함
+			bst_remove_max(root_ptr->left(), root_ptr->data());
+			return true;
+		}
+	}
 	}
 
-	// If code reaches this point, then we must remove the target from
-	// the current node. We'll actually replace this target with the
-	// maximum item in our left subtree.
-	// Note: Any change made to root_ptr->left by bst_remove_max
-	// will change the actual left pointer (because the return
-	// value from the left() member function is a reference to the
-	// actual left pointer.
-	bst_remove_max(root_ptr->left(), root_ptr->data());
-	return true;
-}
 
 template <class Item>
 typename bag<Item>::size_type bst_remove_all
@@ -192,21 +170,20 @@ typename bag<Item>::size_type bag<Item>::size() const
 
 template <class Item>
 void bag<Item>::insert(const Item& entry)
-// Header file used: bintree.h
 {
 	tree<Item> *cursor;
 
 	if (root_ptr == NULL)
-	{   // Add the first node of the binary search tree:
+	{	// 처음이면 그냥 새로운 트리 추가
 		root_ptr = new tree<Item>(entry);
 		return;
 	}
 	else
-	{   // Move down the tree and add a new leaf:
+	{	// 처음이 아니면 entry 값에 따라 트리 추가
 		cursor = root_ptr;
 		while (1)
 		{
-			if (entry <= cursor->data())	// right side
+			if (entry <= cursor->data())
 			{
 				if (cursor->left() == NULL)
 				{
@@ -231,10 +208,8 @@ void bag<Item>::insert(const Item& entry)
 				{
 					cursor = cursor->right();
 				}
-
 			}
 		}
-
 	}
 }
 
