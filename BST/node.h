@@ -107,21 +107,6 @@ bool bst_search(tree<Item>*& root_ptr, const Item& target)
 }
 
 template <class Item>
-bool bst_count(tree<Item>*& root_ptr, const Item& target)
-{	// 타겟과 일치하는 데이터 값을 가지면 카운트
-	if (root_ptr->data() == target)
-		return true;
-	else
-	{
-		if (root_ptr->left() != NULL)
-			return bst_search(root_ptr->left(), target);
-		if (root_ptr->right() != NULL)
-			return bst_search(root_ptr->right(), target);
-		return false;
-	}
-}
-
-template <class Item>
 typename bag<Item>::size_type bst_remove_all
 (tree<Item>*& root_ptr, const Item& target)
 // 중복된 타겟을 모두 삭제하는 함수
