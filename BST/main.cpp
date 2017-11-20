@@ -19,25 +19,14 @@ int main(void)
 	b1.insert(19);
 	b1.insert(22);
 	b1.insert(65);
-
 	b1.show_content();
-	b1.sort();
-	cout << endl << "aaa : " <<  b1.count(22);
-
 
 	cout << "--------------------------------------------------------------" << endl;
-	cout << "총 " << b1.erase(22) << "개를 삭제 하였습니다." << endl;
-	b1.sort();
 
-	b1.show_content();
-	cout << "--------------------------------------------------------------" << endl;
-	cout << "총 " << b1.erase(13) << "개를 삭제 하였습니다." << endl;
+
+	b1.erase(22);
 	b1.show_content();
 	b1.sort();
-
-	//init
-
-	cout << "dd" << endl;
 
 	for (;;) {}
 	

@@ -89,39 +89,40 @@ bool bst_remove(tree<Item>*& root_ptr, const Item& target)
 		}
 	}
 
-	}
-
-template <class Item>
-bool bst_search(tree<Item>*& root_ptr, const Item& target)
-{	// 타겟과 일치하는 데이터 값을 가진 트리가 있는지 확인
-	if(root_ptr->data() == target )
-		return true;
-	else
-	{
-		if (root_ptr->left() != NULL)
-			return bst_search(root_ptr->left(), target);
-		if (root_ptr->right() != NULL)
-			return bst_search(root_ptr->right(), target);
-		return false;
-	}
 }
 
+
+
 template <class Item>
-typename bag<Item>::size_type bst_remove_all
-(tree<Item>*& root_ptr, const Item& target)
-// 중복된 타겟을 모두 삭제하는 함수
-{
+typename bag<Item>::size_type bst_remove_all(tree<Item>*& root_ptr, const Item& target)
+{	// 중복된 타겟을 모두 삭제하는 함수
 
 	tree<Item> *oldroot_ptr;
 	bag<Item>::size_type count = 0;
 
-	while (bst_search(root_ptr, target))
-	{	// bst_search 함수를 통해 타겟이 트리에 있다면 하나씩 지운다.
-		bst_remove(root_ptr, target);
-		count++;
+	if (root_ptr == NULL) // 빈 트리면 끝
+		return  count;
+	if (target < root_ptr->data())	// 데이터가 타겟보다 크면 왼쪽 트리에서 삭제
+		return bst_remove_all(root_ptr->left(), target);
+	else if(target > root_ptr->data())// 데이터가 타겟보다 작으면 오른쪽 탐색
+		return bst_remove_all(root_ptr->right(), target);
+		// 타겟과 데이터 값이 같으면
+	else
+	{
+		if (root_ptr->left() == NULL)
+		{   // 왼쪽 트리가 없으면 오른쪽 트리가 루트가 됨
+			oldroot_ptr = root_ptr;
+			root_ptr = root_ptr->right();
+			delete oldroot_ptr;
+			return 1;
+		}
+		else
+		{
+			bst_remove_max(root_ptr->left(), root_ptr->data());
+			return 1 + bst_remove_all(root_ptr, target);
+		}
 	}
 
-	return count;
 }
 
 template <class Item>
