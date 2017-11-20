@@ -9,27 +9,23 @@ class bag
 public:
 	typedef size_t size_type;
 	typedef Item value_type;
-	// CONSTRUCTORS and DESTRUCTOR ....
 	bag() { root_ptr = NULL; }
 	bag(const bag& source);
 	~bag();
-	// MODIFICATION functions
 	size_type erase(const Item& target);
 	bool erase_one(const Item& target);
 	void insert(const Item& entry);
 	void sort();
 	void operator +=(const bag& addend);
 	void operator =(const bag& source);
-	// CONSTANT functions
 	size_type size() const;
 	size_type count(const Item& target) const;
-	void debug() const { print(root_ptr, 3); }
+	void show_content() const { print(root_ptr, 2); }
 private:
-	tree<Item> *root_ptr; // Root pointer of binary search tree
+	tree<Item> *root_ptr; 
 	void insert_all(tree<Item>* addroot_ptr);
 };
 
-// NONMEMBER functions for the tree<Item> template class
 template <class Item>
 bag<Item> operator +(const bag<Item>& b1, const bag<Item>& b2);
 
@@ -111,6 +107,21 @@ bool bst_search(tree<Item>*& root_ptr, const Item& target)
 }
 
 template <class Item>
+bool bst_count(tree<Item>*& root_ptr, const Item& target)
+{	// 타겟과 일치하는 데이터 값을 가지면 카운트
+	if (root_ptr->data() == target)
+		return true;
+	else
+	{
+		if (root_ptr->left() != NULL)
+			return bst_search(root_ptr->left(), target);
+		if (root_ptr->right() != NULL)
+			return bst_search(root_ptr->right(), target);
+		return false;
+	}
+}
+
+template <class Item>
 typename bag<Item>::size_type bst_remove_all
 (tree<Item>*& root_ptr, const Item& target)
 // 중복된 타겟을 모두 삭제하는 함수
@@ -130,21 +141,18 @@ typename bag<Item>::size_type bst_remove_all
 
 template <class Item>
 bag<Item>::bag(const bag<Item>& source)
-// Library facilities used: bintree.h
 {
 	root_ptr = tree_copy(source.root_ptr);
 }
 
 template <class Item>
 bag<Item>::~bag()
-// Header file used: bintree.h
 {
 	tree_clear(root_ptr);
 }
 
 template <class Item>
 typename bag<Item>::size_type bag<Item>::size() const
-// Header file used: bintree.h
 {
 	return tree_size(root_ptr);
 }
@@ -204,12 +212,25 @@ template <class Item>
 typename bag<Item>::size_type bag<Item>::count(const Item& target) const
 {
 	size_type answer = 0;
-	tree<Item> *cursor;
+	tree<Item>* cursor = root_ptr;
 
-	cursor = root_ptr;
-	/* STUDENT WORK */
-
-
+	if (root_ptr == NULL)	// 빈 트리면 끝.
+		return 0; 
+	else
+	{
+		while (cursor != NULL)
+		{
+			if (cursor->data() < target)	// 타겟보다 작으면 오른쪽 탐색
+				cursor = cursor->right();
+			else if (cursor->data() > target) // 타겟보다 크면 왼쪽 탐색
+				cursor = cursor->left();
+			else if (cursor->data() == target)
+			{ // 타겟을 찾으면 카운트 증가하고 왼쪽도 탐색
+				answer++;
+				cursor = cursor->left();
+			}
+		}
+	}
 	return answer;
 }
 
@@ -227,7 +248,6 @@ bool bag<Item>::erase_one(const Item& target)
 
 template <class Item>
 void bag<Item>::operator =(const bag<Item>& source)
-// Header file used: bintree.h
 {
 	if (root_ptr == source.root_ptr)
 		return;
