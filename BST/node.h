@@ -25,10 +25,6 @@ private:
 	tree<Item> *root_ptr; 
 	void insert_all(tree<Item>* addroot_ptr);
 };
-
-template <class Item>
-bag<Item> operator +(const bag<Item>& b1, const bag<Item>& b2);
-
 template <class Item>
 void bst_remove_max(tree<Item>*& root_ptr, Item& removed)
 // 현재 data 값 자리에 왼쪽 트리 중에 가장 큰 값으로 대체하고 삭제하는 함수
@@ -253,14 +249,6 @@ void bag<Item>::operator +=(const bag<Item>& addend)
 	}
 	else
 		insert_all(addend.root_ptr);
-}
-
-template <class Item>
-bag<Item> operator +(const bag<Item>& b1, const bag<Item>& b2)
-{
-	bag<Item> answer = b1;
-	answer += b2;
-	return answer;
 }
 
 template <class Item>

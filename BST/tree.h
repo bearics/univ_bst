@@ -31,21 +31,6 @@ private:
 };
 
 template <class Item>
-void inorder(tree<Item>* node_ptr);
-
-template <class Item, class SizeType>
-void print(tree<Item>* node_ptr, SizeType depth);
-
-template <class Item>
-void tree_clear(tree<Item>*& root_ptr);
-
-template <class Item>
-tree<Item>* tree_copy(const tree<Item>* root_ptr);
-
-template <class Item>
-size_t tree_size(const tree<Item>* node_ptr);
-
-template <class Item>
 void inorder(tree<Item>* node_ptr)
 {
 	if (node_ptr != NULL)
