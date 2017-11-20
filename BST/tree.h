@@ -43,14 +43,8 @@ private:
 };
 
 // NON-MEMBER FUNCTIONS for the tree<Item>:
-template <class Process, class BTNode>
-void inorder(Process f, BTNode* node_ptr);
-
-template <class Process, class BTNode>
-void preorder(Process f, BTNode* node_ptr);
-
-template <class Process, class BTNode>
-void postorder(Process f, BTNode* node_ptr);
+template <class BTNode>
+void inorder(BTNode* node_ptr);
 
 template <class Item, class SizeType>
 void print(tree<Item>* node_ptr, SizeType depth);
@@ -64,93 +58,68 @@ tree<Item>* tree_copy(const tree<Item>* root_ptr);
 template <class Item>
 size_t tree_size(const tree<Item>* node_ptr);
 
-template <class Process, class BTNode>
-	void inorder(Process f, BTNode* node_ptr)
-	// Library facilities used: cstdlib
+template <class BTNode>
+void inorder(BTNode* node_ptr)
+// Library facilities used: cstdlib
+{
+	if (node_ptr != NULL)
 	{
-		if (node_ptr != NULL)
-		{
-			inorder(f, node_ptr->left( ));
-			f( node_ptr->data( ) );
-			inorder(f, node_ptr->right( ));
-		}
+		inorder(node_ptr->left( ));
+		cout << node_ptr->data() << " ";
+		inorder(node_ptr->right( ));
 	}
+}
 
-	template <class Process, class BTNode>
-	void postorder(Process f, BTNode* node_ptr)
-	// Library facilities used: cstdlib
+template <class Item, class SizeType>
+void print(tree<Item>* node_ptr, SizeType depth)
+// Library facilities used: iomanip, iostream, stdlib
+{
+	if (node_ptr != NULL)
 	{
-		if (node_ptr != NULL)
-		{
-			postorder(f, node_ptr->left( ));
-			postorder(f, node_ptr->right( ));
-			f(node_ptr->data( ));
-		}
+		print(node_ptr->right( ), depth+1);
+		std::cout << std::setw(4*depth) << ""; // Indent 4*depth spaces.
+		std::cout << node_ptr->data( ) << std::endl;
+		print(node_ptr->left( ),  depth+1);
 	}
-
-	template <class Process, class BTNode>
-	void preorder(Process f, BTNode* node_ptr)
-	// Library facilities used: cstdlib
-	{
-		if (node_ptr != NULL)
-		{
-			f( node_ptr->data( ) );
-			preorder(f, node_ptr->left( ));
-			preorder(f, node_ptr->right( ));
-		}
-	}
-
-	template <class Item, class SizeType>
-	void print(tree<Item>* node_ptr, SizeType depth)
-	// Library facilities used: iomanip, iostream, stdlib
-	{
-		if (node_ptr != NULL)
-		{
-			print(node_ptr->right( ), depth+1);
-			std::cout << std::setw(4*depth) << ""; // Indent 4*depth spaces.
-			std::cout << node_ptr->data( ) << std::endl;
-			print(node_ptr->left( ),  depth+1);
-		}
-	}    
+}    
 	
-	template <class Item>
-	void tree_clear(tree<Item>*& root_ptr)
-	// Library facilities used: cstdlib
-	{
-	if (root_ptr != NULL)
-	{
-		tree_clear( root_ptr->left( ) );
-		tree_clear( root_ptr->right( ) );
-		delete root_ptr;
-		root_ptr = NULL;
-	}
-	}
+template <class Item>
+void tree_clear(tree<Item>*& root_ptr)
+// Library facilities used: cstdlib
+{
+if (root_ptr != NULL)
+{
+	tree_clear( root_ptr->left( ) );
+	tree_clear( root_ptr->right( ) );
+	delete root_ptr;
+	root_ptr = NULL;
+}
+}
 
-	template <class Item>
-	tree<Item>* tree_copy(const tree<Item>* root_ptr)
-	// Library facilities used: cstdlib
-	{
-	tree<Item> *l_ptr;
-	tree<Item> *r_ptr;
+template <class Item>
+tree<Item>* tree_copy(const tree<Item>* root_ptr)
+// Library facilities used: cstdlib
+{
+tree<Item> *left;
+tree<Item> *right;
 
-	if (root_ptr == NULL)
-		return NULL;
-	else
-	{
-		l_ptr = tree_copy( root_ptr->left( ) );
-		r_ptr = tree_copy( root_ptr->right( ) );
-		return
-		new tree<Item>( root_ptr->data( ), l_ptr, r_ptr);
-	}
-	}
+if (root_ptr == NULL)
+	return NULL;
+else
+{
+	left = tree_copy( root_ptr->left( ) );
+	right = tree_copy( root_ptr->right( ) );
+	return
+	new tree<Item>( root_ptr->data( ), left, right);
+}
+}
 
-	template <class Item>
-	size_t tree_size(const tree<Item>* node_ptr)
-	// Library facilities used: cstdlib
-	{
-		if (node_ptr == NULL)
-			return 0;
-		else 
-			return 
-		1 + tree_size(node_ptr->left( )) + tree_size(node_ptr->right( ));
-	}
+template <class Item>
+size_t tree_size(const tree<Item>* node_ptr)
+// Library facilities used: cstdlib
+{
+	if (node_ptr == NULL)
+		return 0;
+	else 
+		return (1 + tree_size(node_ptr->left( )) + tree_size(node_ptr->right( )));
+}

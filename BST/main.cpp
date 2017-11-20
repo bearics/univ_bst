@@ -22,13 +22,19 @@ int main(void)
 	b1.insert(9);
 	b1.insert(13);
 	b1.debug();
+	b1.sort();
+
 
 	cout << "--------------------------------------------------------------" << endl;
-	b1.erase(9);
+	cout << "총 " << b1.erase(9) << "개를 삭제 하였습니다." << endl;
+	b1.sort();
+
 	b1.debug();
 	cout << "--------------------------------------------------------------" << endl;
-	b1.erase(13);
+	cout << "총 " << b1.erase(13) << "개를 삭제 하였습니다." << endl;
 	b1.debug();
+	b1.sort();
+
 	//init
 
 	cout << "dd" << endl;

@@ -17,6 +17,7 @@ public:
 	size_type erase(const Item& target);
 	bool erase_one(const Item& target);
 	void insert(const Item& entry);
+	void sort();
 	void operator +=(const bag& addend);
 	void operator =(const bag& source);
 	// CONSTANT functions
@@ -194,6 +195,12 @@ void bag<Item>::insert(const Item& entry)
 }
 
 template <class Item>
+void bag<Item>::sort()
+{
+	inorder(root_ptr);
+}
+
+template <class Item>
 typename bag<Item>::size_type bag<Item>::count(const Item& target) const
 {
 	size_type answer = 0;
@@ -201,6 +208,7 @@ typename bag<Item>::size_type bag<Item>::count(const Item& target) const
 
 	cursor = root_ptr;
 	/* STUDENT WORK */
+
 
 	return answer;
 }
